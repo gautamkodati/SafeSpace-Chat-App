@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import Space from "./pages/space/Space";
 import Planets from "./pages/planets/Planets";
 
-const socket  = io("http://localhost:5000")
+const socket  = io("/")
 
 function App() {
 
