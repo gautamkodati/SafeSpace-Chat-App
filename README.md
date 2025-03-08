@@ -1,5 +1,3 @@
-Absolutely! Here's a **human-like, comprehensive README** description for your project based on what you've built. It’s written in a natural tone to make it engaging and professional:
-
 ---
 
 # **SafeSpace: A Mental Health Peer Support Platform**
