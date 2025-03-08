@@ -1,4 +1,5 @@
-import { MemberRole } from "@prisma/client"
+import prismaClient from "@prisma/client";
+const { MemberRole } = prismaClient;
 import prisma from "../db/prisma.js"
 
 export const createServer = async (req, res) => {
