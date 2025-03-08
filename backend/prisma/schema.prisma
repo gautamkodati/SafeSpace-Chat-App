@@ -1,0 +1,170 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String   @id @default(cuid())
+  username         String   @unique
+  fullName         String
+  password         String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  conversationsIds String[]
+
+  // conversations Conversation[]
+  // messages      Message[]
+
+  // posts Post[]
+
+  // comments Comment[]
+  // likes Like[]
+
+  servers Server[]
+  messages Message[]
+  members Member[]
+  protoMsgs protoMsg[]
+}
+
+model Server {
+  id               String   @id @default(cuid())
+  serverName String
+  serverTheme String
+  serverIcon String
+  ownerId String
+  owner User @relation(fields: [ownerId], references: [id])
+
+  discussions Discussion[]
+  members Member[]
+  messages Message[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Discussion {
+  id               String   @id @default(cuid())
+  discussionName String
+  discussionDesc String
+  serverId String
+  server Server @relation(fields: [serverId], references: [id])
+  messages Message[]
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Member {
+  id               String   @id @default(cuid())
+  role MemberRole @default(MEMBER)
+  memberUserId String
+  memberUser User @relation(fields: [memberUserId], references: [id])
+  serverId String
+  server Server @relation(fields: [serverId], references: [id])
+  @@unique([memberUserId, serverId])
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Message {
+  id               String   @id @default(cuid())
+  senderId String
+  sender User @relation(fields: [senderId], references: [id])
+  text String
+  imgpic String
+  type String?
+  username String?
+  serverId String
+  server Server @relation(fields: [serverId], references: [id])
+  discussionId String
+  discussion Discussion @relation(fields: [discussionId], references: [id])
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+enum MemberRole {
+  OWNER
+  MEMBER
+}
+
+// model Conversation {
+//   id        String   @id @default(cuid())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   participantIds String[]
+//   participants   User[]
+
+//   messageIds String[]
+//   messages   Message[]
+// }
+
+// model Message {
+//   id String @id @default(cuid())
+
+//   conversationId String
+//   conversation   Conversation @relation(fields: [conversationId], references: [id])
+
+//   senderId String
+//   sender   User   @relation(fields: [senderId], references: [id])
+
+//   body      String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+
+enum Gender {
+  male
+  female
+}
+
+// model Post {
+//   id               String   @id @default(cuid())
+//   title     String
+//   content   String
+//   author User @relation(fields: [authorId], references: [id])
+//   authorId String
+//   comments Comment[]
+//   likes Like[]
+//   createdAt        DateTime @default(now())
+//   updatedAt        DateTime @updatedAt
+// }
+
+// model Comment {
+//   id               String   @id @default(cuid())
+//   commenter User @relation(fields: [commenterId], references: [id])
+//   commenterId String
+//   commentText String
+//   post Post @relation(fields: [postId], references: [id])
+//   postId String
+//   createdAt        DateTime @default(now())
+//   updatedAt        DateTime @updatedAt
+// }
+
+// model Like {
+//   id               String   @id @default(cuid())
+//   liker User @relation(fields: [likerId], references: [id])
+//   likerId String
+//   post Post @relation(fields: [postId], references: [id])
+//   postId String
+//   @@unique([likerId, postId]) // Ensures each user can like a post only once
+// }
+
+model protoMsg {
+  id       String   @id @default(cuid())
+  username String
+  roomId   String
+  text     String
+  kotoId   String
+  koto User @relation(fields: [kotoId], references: [id])
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
